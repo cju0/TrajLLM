@@ -1,0 +1,57 @@
+{
+    "age": [
+        {"male": 1.896, "female": 1.813}, 
+        {"male": 1.936, "female": 1.850}, 
+        {"male": 1.876, "female": 1.783}, 
+        {"male": 1.966, "female": 1.907}, 
+        {"male": 2.826, "female": 2.861}, 
+        {"male": 3.244, "female": 3.248}, 
+        {"male": 3.289, "female": 3.242}, 
+        {"male": 3.542, "female": 3.418}, 
+        {"male": 3.748, "female": 3.634}, 
+        {"male": 4.140, "female": 4.082}, 
+        {"male": 3.773, "female": 3.632}, 
+        {"male": 3.189, "female": 3.016}, 
+        {"male": 2.486, "female": 2.427}, 
+        {"male": 2.383, "female": 2.445}, 
+        {"male": 2.640, "female": 2.943}, 
+        {"male": 1.963, "female": 2.52}, 
+        {"male": 1.388, "female": 2.065}, 
+        {"male": 1.207, "female": 2.568}
+    ],
+    "employment": {
+        "total": [74.61, 58.96],
+        "working_age": [67.2, 59.9],
+        "retirement": 64
+    },
+    "education": {
+        "PhD": 1.7,
+        "Postgraduate": 13.4,
+        "Undergraduate": 34.6,
+        "Diploma": 15.7,
+        "Certificate III & IV": 29.5,
+        "Certificate I & II": 4.5
+    },
+    "occupation": {
+        "Agriculture and forestry": 205,
+        "Fisheries": 7,
+        "Mining and quarrying of stone and gravel": 10,
+        "Construction": 4014,
+        "Manufacturing": 7479,
+        "Electricity, gas, heat supply and water": 346,
+        "Information and communications": 10491,
+        "Transport and postal activities":3507,
+        "Wholesale and retail trade": 11527,
+        "Finance and insurance": 3397,
+        "Real estate and goods rental and leasing": 3263,
+        "Scientific research, professional and technical services": 6118,
+        "Accommodations, eating and drinking services": 4333,
+        "Living-related and personal services and amusement services": 2664,
+        "Education, learning support": 4261,
+        "Medical, health care and welfare": 8843,
+        "Compound services": 239,
+        "Services, N.E.C.": 7112,
+        "Government, except elsewhere classified": 2735,
+        "Other industries": 2418
+    }
+}

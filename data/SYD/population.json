@@ -1,0 +1,48 @@
+{
+    "age": [
+        {"male": 3.1, "female": 2.9}, 
+        {"male": 3.2, "female": 3.0}, 
+        {"male": 3.2, "female": 3.0}, 
+        {"male": 3.0, "female": 2.8}, 
+        {"male": 3.5, "female": 3.2}, 
+        {"male": 3.9, "female": 3.8}, 
+        {"male": 4.0, "female": 4.0}, 
+        {"male": 3.9, "female": 4.0}, 
+        {"male": 3.5, "female": 3.5}, 
+        {"male": 3.2, "female": 3.2}, 
+        {"male": 3.0, "female": 3.2}, 
+        {"male": 2.8, "female": 2.8}, 
+        {"male": 2.5, "female": 2.7}, 
+        {"male": 2.1, "female": 2.3}, 
+        {"male": 1.8, "female": 2.0}, 
+        {"male": 1.4, "female": 1.5}, 
+        {"male": 0.9, "female": 1.1}, 
+        {"male": 0.8, "female": 1.2}
+    ],
+    "employment": {
+        "total": [67.2, 59.9],
+        "working_age": [67.2, 59.9],
+        "retirement": 56.9
+    },
+    "occupation": {
+        "Agriculture, Forestry and Fishing": 83.5,
+        "Mining": 30.3,
+        "Manufacturing": 250.1,
+        "Electricity, Gas, Water and Waste Services": 46.8,
+        "Construction": 421.6,
+        "Wholesale Trade": 122.5,
+        "Retail Trade": 393.8,
+        "Accommodation and Food Services": 293.7,
+        "Transport, Postal and Warehousing": 242.9,
+        "Information Media and Telecommunications": 75.5,
+        "Financial and Insurance Services": 222.9,
+        "Rental, Hiring and Real Estate Services": 76.4,
+        "Professional, Scientific and Technical Services": 494.6,
+        "Administrative and Support Services": 124.3,
+        "Public Administration and Safety": 269.8,
+        "Education and Training": 385.2,
+        "Health Care and Social Assistance": 691.5,
+        "Arts and Recreation Services": 94.9,
+        "Other Services": 150.1
+    }
+}

@@ -1,0 +1,599 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multi-Agent Simulation</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <style>
+        body {
+            font-family: "Roboto", Arial, sans-serif;
+            background-color: #f4f4f9;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            font-size: 16px;
+            overflow-y: auto;
+            scroll-behavior: smooth;
+        }
+
+        h1 {
+            font-size: 2em;
+            text-align: center;
+            margin-top: 1em;
+        }
+
+        .clock-container {
+            text-align: center;
+            font-size: 1.2em;
+            margin: 1em;
+            font-weight: bold;
+        }
+
+        .slider-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 1em auto;
+            font-size: 1.2em;
+        }
+
+        .slider-container label {
+            margin-bottom: 0.5em;
+            font-weight: bold;
+        }
+
+        .slider-container input[type="range"] {
+            width: 70%; /* Larger slider width */
+            margin: 1em 0;
+            cursor: pointer;
+        }
+
+        .slider-container span {
+            font-size: 1.2em;
+            margin-top: 0.5em;
+            font-weight: bold;
+        }
+
+        #map {
+            height: 500px; /* Reduced height */
+            width: 100%;   /* Full width of the left column */
+            margin: 1em 0;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 1.5em 0;
+            gap: 1em;
+            margin-top: 1em;
+        }
+
+        .controls input {
+            font-size: 1em;
+            padding: 0.5em;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        .controls button {
+            font-size: 1em;
+            padding: 0.5em 1em;
+            color: white;
+            background-color: #007bff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .controls button:hover {
+            background-color: #0056b3;
+            transform: translateY(-2px);
+        }
+
+        .agent-buttons {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            margin: 1em auto;
+            margin-top: 1em;
+        }
+
+        .agent-buttons button {
+            font-size: 1em;
+            padding: 0.5em 1em;
+            margin: 0.3em;
+            /* background-color: #28a745; */ /* Remove this line */
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .agent-buttons button:hover {
+            /* background-color: #1e7e34; */
+            transform: translateY(-2px);
+        }
+
+        .agent-button-on {
+            background-color: #28a745; /* Green */
+        }
+
+        .agent-button-off {
+            background-color: #dc3545; /* Red */
+        }
+
+        .activity-display {
+            width: 100%;
+            height: 600px; /* Set a fixed height as needed */
+            overflow-y: auto; /* Enable vertical scrolling */
+            margin: 1em 0;
+            padding: 1em;
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow-anchor: none;
+        }
+
+        .activity-display h2 {
+            text-align: center;
+            font-size: 1.8em;
+            margin-bottom: 1em;
+            color: #333;
+        }
+
+        .agent-activity {
+            font-size: 1em;
+            padding: 1em;
+            margin: 1em 0;
+            background-color: #ffffff; 
+            border-left: 5px solid #007bff; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            color: #000; 
+        }
+
+        .agent-activity:nth-child(even) {
+            background-color: #f4f4f9; 
+        }
+
+        .main-container {
+            display: flex;
+            justify-content: space-between;
+            width: 90%;
+            margin: 0 auto;
+        }
+
+        /* Left column styling */
+        .left-column {
+            flex: 1.5;
+            margin-right: 1em;
+        }
+
+        /* Right column styling */
+        .right-column {
+            flex: 1;
+            background-color: white;
+            padding: 1em;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-height: 700px;
+            overflow-y: auto;
+        }
+
+        .right-column h2 {
+            text-align: center;
+            margin-bottom: 1em;
+        }
+
+        .agent-info-item {
+            margin-bottom: 1em;
+            padding: 0.5em;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+            color: #000;
+        }
+
+        .agent-info-item h3 {
+            margin: 0 0 0.5em 0;
+            color: #333;
+        }
+
+        .agent-info-item p {
+            margin: 0.2em 0;
+            font-size: 0.95em;
+            color: #555;
+        }
+
+
+
+
+    </style>    
+</head>
+<body>
+    <h1>A Day in the Life of Tokyo Residents</h1>
+    <div class="clock-container">
+        <span><span id="clock">00:00</span></span>
+    </div>
+
+    <div class="slider-container">
+        <label for="timeSlider">Simulation Time:</label>
+        <input type="range" id="timeSlider" min="0" max="1440" step="15" value="0">
+        <span id="sliderTime">00:00</span>
+    </div>
+
+    <div class="main-container">
+        <!-- Left Column -->
+        <div class="left-column">
+            <div id="map"></div>
+
+            <div class="controls">
+                <label for="startTime">Start Time:</label>
+                <input type="text" id="startTime" placeholder="00:00">
+
+                <label for="numAgents">Number of Agents:</label>
+                <input type="number" id="numAgents" min="1" max="50" value="10">
+
+                <button onclick="startDay()">Start Day</button>
+            </div>
+
+            <div class="agent-buttons" id="agentButtons">
+                <!-- Agent toggle buttons will be populated here -->
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+            <!-- <div class="agent-info-display">
+                <h2>Agent Information</h2>
+                <div id="agent-info"></div>
+            </div> -->
+
+            <div class="activity-display">
+                <h2>Live Movement Updates</h2>
+                <div id="agent-activities"></div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+
+
+    <script>
+        let map;
+        let agents = {};
+        let time = 0; // Time in minutes, starting at 0 (00:00) by default
+        let interval;
+        const updateInterval = 15; // 15 minutes per interval
+        let isAutoRunning = true;
+        const agentColors = ["#FF5733", "#33FF57", "#3357FF", "#FF33A8", "#FF8F33", "#33FFF8", "#FF3333", "#8B33FF", "#FF8E33", "#33FF83"];
+
+        function initMap() {
+            map = L.map('map').setView([35.6895, 139.6917], 11); // Centered on Tokyo
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                maxZoom: 18,
+            }).addTo(map);
+
+            // Removed fetchAgents(); from here
+        }
+
+
+        function fetchAgents(numAgents) {
+            fetch('/start_day', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ numAgents: numAgents })
+            })
+            .then(response => response.json())
+            .then(data => {
+                agents = data.agents;
+                initializeAgentPaths();
+                populateAgentButtons();
+                displayAgentInfo();
+            });
+        }
+
+        function populateAgentButtons() {
+            const buttonsContainer = document.getElementById("agentButtons");
+            buttonsContainer.innerHTML = ''; // Clear any previous buttons
+
+            Object.keys(agents).forEach((agentId, index) => {
+                const agentData = agents[agentId];
+                const name = agentData.name;
+                const age = agentData.age;
+                const button = document.createElement("button");
+                button.textContent = `${name} (Age: ${age})`;
+                button.onclick = () => toggleAgentVisibility(agentId);
+
+                // Assign the 'agent-button-on' class to indicate the agent is visible
+                button.classList.add('agent-button-on');
+
+                // Store the button element in agentData for future reference
+                agentData.button = button;
+
+                buttonsContainer.appendChild(button);
+            });
+        }
+
+
+
+        function toggleAgentVisibility(agentId) {
+            const agentData = agents[agentId];
+            const polyline = agentData?.polyline;
+            const marker = agentData?.marker;
+            const button = agentData?.button;
+
+            if (polyline && marker && button) {
+                if (map.hasLayer(polyline)) {
+                    // Agent is currently visible; hide it
+                    map.removeLayer(polyline);
+                    map.removeLayer(marker);
+
+                    // Update button class to 'agent-button-off'
+                    button.classList.remove('agent-button-on');
+                    button.classList.add('agent-button-off');
+                } else {
+                    // Agent is currently hidden; show it
+                    map.addLayer(polyline);
+                    map.addLayer(marker);
+
+                    // Update button class to 'agent-button-on'
+                    button.classList.remove('agent-button-off');
+                    button.classList.add('agent-button-on');
+                }
+            }
+        }
+
+
+        function initializeAgentPaths() {
+            Object.keys(agents).forEach((agentId, index) => {
+                const agentData = agents[agentId];
+                const color = agentColors[index % agentColors.length];
+                agentData.polyline = L.polyline([], { color: color, weight: 3 }).addTo(map);
+                agentData.polylinePoints = [];
+
+                const firstActivity = agentData.activities[0];
+                if (firstActivity) {
+                    const lat = firstActivity.lat;
+                    const lng = firstActivity.lng;
+                    agentData.marker = L.marker([lat, lng]).addTo(map);
+                    agentData.marker.bindTooltip(agentData.name, { permanent: true, direction: "right" }).openTooltip();
+                }
+            });
+        }
+
+
+
+        function startDay() {
+            const startTime = document.getElementById("startTime").value.trim();
+            const numAgents = parseInt(document.getElementById("numAgents").value, 10);
+            if (!/^([0-1]\d|2[0-3]):([0-5]\d)$/.test(startTime)) {
+                alert("Please enter a valid time in 24-hour format (e.g., 08:00).");
+                return;
+            }
+            if (isNaN(numAgents) || numAgents < 1) {
+                alert("Please enter a valid number of agents.");
+                return;
+            }
+            time = timeToMinutes(startTime); // Convert start time to minutes
+            clearInterval(interval);         // Stop any previous simulation
+            isAutoRunning = true;            // Allow automatic progression
+            fetchAgents(numAgents); 
+            startSimulation();
+        }
+
+        function startSimulation() {
+            clearInterval(interval);
+            interval = setInterval(updateClock, 1000); // Slower time progression
+            isAutoRunning = true;
+            document.getElementById("timeSlider").value = time;
+            document.getElementById("clock").textContent = formatTime(time);
+        }
+
+        function updateClock() {
+            if (!isAutoRunning) return; // Skip updates if auto-running is disabled
+
+            time += updateInterval; // Increment the time by the defined interval (15 mins)
+            if (time >= 1440) {
+                clearInterval(interval); // Stop when 24 hours is reached
+            }
+
+            // Update clock display and slider position
+            document.getElementById("clock").textContent = `Time: ${formatTime(time)}`;
+            document.getElementById("timeSlider").value = time;
+            document.getElementById("sliderTime").textContent = formatTime(time);
+
+            updateAgents();
+        }
+        
+        function displayAgentInfo() {
+            const agentInfoContainer = document.getElementById("agent-info");
+            agentInfoContainer.innerHTML = ''; // Clear any existing content
+
+            Object.keys(agents).forEach(agentId => {
+                const agentData = agents[agentId];
+
+                const infoItem = document.createElement("div");
+                infoItem.className = "agent-info-item";
+                infoItem.style.borderLeft = `5px solid ${agentColors[parseInt(agentId) % agentColors.length]}`;
+
+                infoItem.innerHTML = `
+                    <h3>${agentData.name} (Age: ${agentData.age})</h3>
+                    <p><strong>Gender:</strong> ${agentData.gender}</p>
+                    <p><strong>Occupation:</strong> ${agentData.occupation}</p>
+                `;
+
+                agentInfoContainer.appendChild(infoItem);
+            });
+        }
+
+
+
+
+        function formatTime(minutes) {
+            const hours = String(Math.floor(minutes / 60)).padStart(2, '0');
+            const mins = String(minutes % 60).padStart(2, '0');
+            return `${hours}:${mins}`;
+        }
+
+        function updateAgents() {
+            const activityContainer = document.getElementById("agent-activities");
+            const previousScrollHeight = activityContainer.scrollHeight;
+            const scrollTop = activityContainer.scrollTop;
+
+            // Create a new document fragment to build the updated content
+            const fragment = document.createDocumentFragment();
+
+            Object.keys(agents).forEach(agentId => {
+                const agentData = agents[agentId];
+                const activities = agentData.activities;
+                const currentActivity = activities.find(activity => {
+                    const startMinutes = timeToMinutes(activity.startTime);
+                    const endMinutes = timeToMinutes(activity.endTime);
+                    return time >= startMinutes && time < endMinutes;
+                });
+
+                if (currentActivity) {
+                    updateAgentMarker(agentId, currentActivity.lat, currentActivity.lng);
+                    addToAgentPath(agentId, currentActivity.lat, currentActivity.lng, time);
+                    const activityInfo = createActivityInfo(agentId, currentActivity);
+                    fragment.appendChild(activityInfo);
+                }
+            });
+
+            // Replace the content of activityContainer with the fragment
+            activityContainer.innerHTML = "";
+            activityContainer.appendChild(fragment);
+
+            // Restore the scroll position
+            if (activityContainer.scrollHeight !== previousScrollHeight) {
+                activityContainer.scrollTop = scrollTop;
+            }
+        }
+
+        function createActivityInfo(agentId, activity) {
+            const agentData = agents[agentId];
+
+            const activityIcons = {
+                "education": "📚",
+                "leisure activities": "🎉",
+                "sleep": "🛏️",
+                "work": "💼",
+                "shopping": "🛒",
+            };
+
+            const activityInfo = document.createElement("div");
+            activityInfo.className = "agent-activity";
+            activityInfo.style.borderLeftColor = agentColors[parseInt(agentId) % agentColors.length];
+            activityInfo.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 5px; color: ${agentColors[parseInt(agentId) % agentColors.length]};">
+                    ${agentData.name} (Age: ${agentData.age})
+                </div>
+                <div>Gender: <strong>${agentData.gender}</strong></div>
+                <div>Occupation: <strong>${agentData.occupation}</strong></div>
+                <div>Activity: <strong>${activityIcons[activity.activityType] || "🏷️"} ${activity.activityType}</strong></div>
+                <div>Location: <strong>${activity.locationType}</strong></div>
+                <div>Time: <strong>${activity.startTime} - ${activity.endTime}</strong></div>
+            `;
+            return activityInfo;
+        }
+
+
+        function sliderChange(event) {
+            // Stop automatic progression
+            clearInterval(interval);
+
+            // Get the slider's current value and update the time
+            time = parseInt(event.target.value, 10); // Convert slider value to minutes
+            document.getElementById("clock").textContent = `Time: ${formatTime(time)}`;
+            document.getElementById("sliderTime").textContent = formatTime(time);
+
+            // Update agents and their polylines based on slider time
+            updateAgents();
+
+            // Resume automatic progression from the slider's position
+            isAutoRunning = true;
+            interval = setInterval(updateClock, 1000); // Restart auto progression
+        }
+
+
+
+
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(":").map(Number);
+            return hours * 60 + minutes;
+        }
+
+        function updateAgentMarker(agentId, lat, lng) {
+            const agentData = agents[agentId];
+            if (!agentData.marker) {
+                agentData.marker = L.marker([lat, lng]).addTo(map);
+                agentData.marker.bindTooltip(agentData.name, { permanent: true, direction: "right" }).openTooltip();
+            } else {
+                agentData.marker.setLatLng([lat, lng]);
+            }
+        }
+
+
+        function addToAgentPath(agentId, lat, lng, currentTime) {
+            const agentData = agents[agentId];
+            if (!agentData.polylinePoints) {
+                agentData.polylinePoints = [];
+            }
+
+            agentData.polylinePoints.push({ lat, lng, time: currentTime });
+
+            const validPoints = agentData.polylinePoints.filter(point => point.time <= currentTime);
+            const latLngs = validPoints.map(point => [point.lat, point.lng]);
+            agentData.polyline.setLatLngs(latLngs);
+        }
+
+
+
+        function displayAgentActivity(agentId, activity) {
+            const agentData = agents[agentId];
+            const activityContainer = document.getElementById("agent-activities");
+
+            const activityIcons = {
+                "education": "📚",
+                "leisure activities": "🎉",
+                "sleep": "🛏️",
+                "work": "💼",
+                "shopping": "🛒",
+            };
+
+            const activityInfo = document.createElement("div");
+            activityInfo.className = "agent-activity";
+            activityInfo.style.borderLeftColor = agentColors[parseInt(agentId) % agentColors.length];
+            activityInfo.innerHTML = `
+                <div style="font-weight: bold; margin-bottom: 5px; color: ${agentColors[parseInt(agentId) % agentColors.length]};">
+                    ${agentData.name} (Age: ${agentData.age})
+                </div>
+                <div>Gender: <strong>${agentData.gender}</strong></div>
+                <div>Occupation: <strong>${agentData.occupation}</strong></div>
+                <div>Activity: <strong>${activityIcons[activity.activityType] || "🏷️"} ${activity.activityType}</strong></div>
+                <div>Location: <strong>${activity.locationType}</strong></div>
+                <div>Time: <strong>${activity.startTime} - ${activity.endTime}</strong></div>
+            `;
+
+            activityContainer.appendChild(activityInfo);
+        }
+
+
+
+
+        document.getElementById("timeSlider").addEventListener("input", sliderChange);
+        window.onload = initMap;
+    </script>
+</body>
+</html>
