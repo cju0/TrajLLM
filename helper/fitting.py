@@ -5,8 +5,6 @@ def gen_time_duration_overall(factors, confidence=0.95):
     '''Using log-normal distribution to generate a random time duration in minutes 
     based on OVERALL checkin time duration distribution'''
 
-    print('>>> td_all <<<')
-
     shape, loc, scale = factors
 
     lower_bound = lognorm.ppf((1 - confidence) / 2, shape, loc=loc, scale=scale)
@@ -20,8 +18,6 @@ def gen_time_duration_overall(factors, confidence=0.95):
 def gen_time_duration_cate(kde_obj):
     '''Generate a random time duration with a specific location category based on generated distributions'''
 
-    print('>>> td_cate <<<')
-
     sample_min = np.min(kde_obj.dataset)
     sample_max = np.max(kde_obj.dataset)
     
@@ -31,7 +27,6 @@ def gen_time_duration_cate(kde_obj):
             return random_duration
 
 def gen_time_duration_bestfit(fitted_params, confidence=0.95):
-    print('>>> td_bestfit <<<')
 
     if not fitted_params:
         raise ValueError(f"No fitted parameters found for given category")
