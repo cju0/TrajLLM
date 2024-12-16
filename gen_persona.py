@@ -320,5 +320,5 @@ Generate persona based on the distribution of population, and the age and sex of
                 if ('work' in daily_act[i]):
                     personas[i]["work"] = gen_random_workplace_TKY(personas[i]["occupation"])
 
-    # with open('res/personas.json','w+') as f3:
-    #     json.dump(personas, f3)
+    with open('res/personas.json','w+') as f3:
+        json.dump(personas, f3)
