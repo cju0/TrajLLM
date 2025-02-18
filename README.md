@@ -1,5 +1,7 @@
 # TrajLLM
 
+[![DOI](https://zenodo.org/badge/899960242.svg)](https://doi.org/10.5281/zenodo.14885828)
+
 ## 📜 Description
 This is the repository for **TrajLLM**. The framework leverages LLMs in realistic human mobility cata generation. It consists 4 modules: **persona**, **activity**, **destination** and **memory**.
 
@@ -66,3 +68,5 @@ python app.py
 ```
 
 Notice that `ROUTINE_DIR` in `./app.py` can be modified to visualise other newly generated trajectories.
+
+[def]: https://doi.org/10.5281/zenodo.14885828
