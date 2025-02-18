@@ -3,7 +3,7 @@
 [![DOI](https://zenodo.org/badge/899960242.svg)](https://doi.org/10.5281/zenodo.14885828)
 
 ## 📜 Description
-This is the repository for **TrajLLM**. The framework leverages LLMs in realistic human mobility cata generation. It consists 4 modules: **persona**, **activity**, **destination** and **memory**.
+This is the repository for **TrajLLM**. The framework leverages LLMs in realistic human mobility data generation. It consists 4 modules: **persona**, **activity**, **destination** and **memory**.
 
 For demonstration purpose, [Foursquare check-in dataset from Tokyo](https://www.kaggle.com/datasets/chetanism/foursquare-nyc-and-tokyo-checkin-dataset) is being used as the underlying POI dataset.
 
