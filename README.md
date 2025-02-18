@@ -1,4 +1,4 @@
-# TrajLLM
+# TrajLLM - A LLM-Empowered Agent-Based Human Mobility Simulation Framework
 
 [![DOI](https://zenodo.org/badge/899960242.svg)](https://doi.org/10.5281/zenodo.14885828)
 
