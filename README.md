@@ -68,5 +68,3 @@ python app.py
 ```
 
 Notice that `ROUTINE_DIR` in `./app.py` can be modified to visualise other newly generated trajectories.
-
-[def]: https://doi.org/10.5281/zenodo.14885828
