@@ -62,9 +62,5 @@ python simulate.py -d 17-11-2024
 ```
 
 ## 🚀 Demonstration
-To run the frontend to visualise the generated trajectories, use the following command:
-```bash
-python app.py
-```
-
-Notice that `ROUTINE_DIR` in `./app.py` can be modified to visualise other newly generated trajectories.
+You can explore the visualisation of our simulated mobility system through an interactive demo:
+🔗 https://trajllm.onrender.com
