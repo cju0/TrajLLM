@@ -1,4 +1,5 @@
-Flask==2.2.3
+Flask==2.3.3
+Werkzeug==2.3.8
 geopy==2.4.1
 numpy==1.24.4
 openai==0.28.1
